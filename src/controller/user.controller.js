@@ -35,7 +35,7 @@ exports.createUser = async (req, res) => {
         });
 
         console.log(`User Created: ${newUser}`);
-        return res.status(201).json({msg: 'user created'})
+        return res.status(201).redirect('/success')
     } catch (error) {
         console.log(error);
         return res.status(500).render('error')
