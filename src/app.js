@@ -116,12 +116,14 @@ cron.schedule('00 07 * * *', async () => {
 
 // Invalid Route
 app.use('*', (req, res) => {
+    console.log('Invalid Route');
     return res.status(404).render('error')
 })
 
 
 // Global Error Handling
 app.use((err, req, res, next) => {
+    console.log(`Server Error: ${err}`);
     return res.status(500).render('error')
 })
 
