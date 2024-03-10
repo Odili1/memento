@@ -20,18 +20,24 @@ exports.createUser = async (req, res) => {
             return res.status(400).render('register', {err: "Recipient with this email already exists", msg: null})
         }
 
-        // Format date to utc timing
-        const arrDOB = dob.split('/').reverse()
-        const utcDOB = DateTime.utc(+arrDOB[0], +arrDOB[1], +arrDOB[2]).ts
+        // Format date of birth
+        const arrDOB = dob.split('-')
+        console.log(arrDOB);
+        const year = arrDOB[0]
+        const month = arrDOB[1]
+        const day = arrDOB[2]
         const newUser = await userModel.create({
             username: username,
             email: email,
-            dob: utcDOB
+            year: +year,
+            month: +month,
+            day: +day
         });
 
         console.log(`User Created: ${newUser}`);
-        return res.status(201).redirect('/success')
+        return res.status(201).json({msg: 'user created'})
     } catch (error) {
+        console.log(error);
         return res.status(500).render('error')
     }
 }

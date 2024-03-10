@@ -44,43 +44,46 @@ app.get('/success', (req, res) => {
     return res.status(200).render('sent')
 })
 
-// async function schedule(){
-//     console.log('hi');
-//     const recipients = await userModel.find({})
 
-//     if (recipients){
-//         const DOB = recipients[0].dob
-//         // const arrDOB = DOB.split('/').reverse()
-//         // const utcDOB = DateTime.utc(+arrDOB[0], +arrDOB[1], +arrDOB[2]).ts
-//         console.log(`DOB: ${DOB}`);
-//         console.log(typeof DOB);
-//         console.log(now == DOB);
-//     }
+async function schedule(){
+    const now = DateTime.utc()
+    console.log(now);
+    console.log(typeof now.month);
     
-// }
+    const recipients = await userModel.find({})
 
+    if (recipients){
+        const day = recipients[0].day
+        const month = recipients[0].month
+    
+        const currentMonth = now.month
+        const currentDay = now.day
+        console.log(`DOB: ${month}`);
+        console.log(typeof day);
+        console.log(currentMonth == month);
+    }
+    
+}
 // schedule()
 
-// console.log(1709818008245 > 1712102400000);
-// console.log(1709818008245 > 1707264000000);
-// console.log(1709818008245 > 1709769600000);
-
 // Cron expression
-cron.schedule('00 7 * * *', async () => {
+cron.schedule('00 07 * * *', async () => {
     try {
         
         // Find recipients that will receive email at the stipulated time
-        const now = DateTime.utc().startOf('day').ts
-        console.log(now);
+        const now = DateTime.utc()
+        const currentMonth = now.month
+        const currerntDay = now.day
 
         const recipients = await userModel.find({
-            dob: {
-                $eq: now
-            }
+            $and: [
+                {month: currentMonth},
+                {day: currerntDay}
+            ]
         })
-
+        console.log(recipients);
         recipients.map(recipient => {
-            // console.log(recipient.dob);
+            console.log(`Recipient:${recipient}`);
             // Email content
             const mailOptions = {
                 email: recipient.email,
@@ -106,7 +109,7 @@ cron.schedule('00 7 * * *', async () => {
     } catch (error) {
         console.log(`Error occured while sending emails: ${error}`);
     }
-    console.log('every seconds');
+    console.log('7am cron check');
 })
 
 

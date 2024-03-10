@@ -11,10 +11,18 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-    dob: {
+    year: {
         type: Number,
         required: true
     },
+    month: {
+        type: Number,
+        required: true
+    },
+    day: {
+        type: Number,
+        required: true
+    }
 }, {timestamps: true})
 
 const userModel = model('user', userSchema)
